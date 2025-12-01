@@ -17,14 +17,8 @@ public class Day01 : BaseDay
         for (int i = 0; i < _input.Length; ++i)
         {
             int rotation = int.Parse(_input[i].Substring(1));
-            if (_input[i][0] == 'R')
-            {
-                position += rotation;
-            }
-            else
-            { 
-                position -= rotation;
-            }
+            int direction = _input[i][0] == 'R' ? 1 : -1;
+            position += rotation * direction;
 
             position = position % 100;
             if (position < 0)
@@ -50,14 +44,8 @@ public class Day01 : BaseDay
             int previousPosition = position;
 
             int rotation = int.Parse(_input[i].Substring(1));
-            if (_input[i][0] == 'R')
-            {
-                position += rotation;
-            }
-            else
-            {
-                position -= rotation;
-            }
+            int direction = _input[i][0] == 'R' ? 1 : -1;
+            position += rotation * direction;
 
             if (position > 0)
             {
