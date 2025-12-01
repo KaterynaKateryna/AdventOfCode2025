@@ -350,4 +350,4 @@ MigrationBackup/
 .ionide/
 
 # Test inputs
-Inputs/
+AdventOfCode/Inputs/
