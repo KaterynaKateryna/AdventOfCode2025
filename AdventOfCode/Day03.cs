@@ -1,4 +1,7 @@
-﻿namespace AdventOfCode;
+﻿using System.Linq;
+using System.Text;
+
+namespace AdventOfCode;
 
 public class Day03 : BaseDay
 {
@@ -14,22 +17,28 @@ public class Day03 : BaseDay
 
     public override ValueTask<string> Solve_1()
     {
-        return new (_input.Sum(GetMaxJoltage).ToString());
+        return new (_input.Sum(x => GetMaxJoltage(x, 2)).ToString());
     }
 
     public override ValueTask<string> Solve_2()
     {
-        return new("");
+        return new(_input.Sum(x => GetMaxJoltage(x, 12)).ToString());
     }
 
-    private int GetMaxJoltage(int[] bank)
+    private long GetMaxJoltage(int[] bank, int batteriesCount)
     {
-        int max = bank.Take(bank.Length - 1).Max();
-        int indexOfMax = bank.IndexOf(max);
+        StringBuilder sb = new();
 
-        int max2 = bank.Skip(indexOfMax + 1).Max();
+        for (int i = 0; i < batteriesCount; ++i)
+        {
+            int max = bank.Take(bank.Length - batteriesCount + i + 1).Max();
+            sb.Append(max.ToString());
 
-        return int.Parse(max.ToString() + max2.ToString());
+            int indexOfMax = bank.IndexOf(max);
+            
+            bank = bank.Skip(indexOfMax + 1).ToArray();
+        }
 
+        return long.Parse(sb.ToString());
     }
 }
