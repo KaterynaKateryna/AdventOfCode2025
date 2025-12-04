@@ -34,7 +34,31 @@ public class Day04 : BaseDay
 
     public override ValueTask<string> Solve_2()
     {
-        return new("");
+        int result = 0;
+        bool canRemove = false;
+        do 
+        {
+            canRemove = false;
+            for (int i = 0; i < _input.Length; ++i)
+            {
+                for (int j = 0; j < _input[0].Length; ++j)
+                {
+                    if (!IsRoll(_input[i][j]))
+                    {
+                        continue;
+                    }
+                    int rollsAround = GetRollsAround(i, j);
+                    if (rollsAround < 4)
+                    {
+                        canRemove = true;
+                        _input[i][j] = '.';
+                        result++;
+                    }
+                }
+            }
+        } while (canRemove);
+
+        return new(result.ToString());
     }
 
     private int GetRollsAround(int row, int column)
