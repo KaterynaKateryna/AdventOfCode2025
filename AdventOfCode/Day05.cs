@@ -54,6 +54,35 @@ public class Day05 : BaseDay
 
     public override ValueTask<string> Solve_2()
     {
-        return new("");
+        List<(long start, long end)> processedRanges = new();
+        long freshCount = 0;
+        foreach (var range in _validRanges)
+        {
+            var deduplicated = DeduplicateRanges(range, processedRanges);
+            if (deduplicated != null)
+            {
+                freshCount += deduplicated.Value.end - deduplicated.Value.start + 1;
+                processedRanges.Add(deduplicated.Value);
+            }
+        }
+
+        return new(freshCount.ToString());
+    }
+
+    private (long start, long end)? DeduplicateRanges((long start, long end) range, List<(long start, long end)> processedRanges)
+    {
+        foreach (var processedRange in processedRanges)
+        {
+            if (range.start >= processedRange.start && range.start <= processedRange.end)
+            {
+                if (range.end >= processedRange.start && range.end <= processedRange.end)
+                {
+                    return null; // this range fully duplicates an existing one
+                }
+
+                range.start = processedRange.end + 1; // trim the start of the range
+            }
+        }
+        return range;
     }
 }
