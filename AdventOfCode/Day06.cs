@@ -58,7 +58,7 @@ public class Day06 : BaseDay
 
             if (trimmed.EndsWith('+') || trimmed.EndsWith('*'))
             {
-                parts.Add(trimmed.Substring(0, trimmed.Length - 1));
+                parts.Add(trimmed.Substring(0, trimmed.Length - 1).Trim());
                 operand = trimmed.Last().ToString();
             }
             else
