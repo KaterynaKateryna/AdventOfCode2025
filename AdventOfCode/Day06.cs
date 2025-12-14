@@ -1,11 +1,8 @@
-﻿
-namespace AdventOfCode;
+﻿namespace AdventOfCode;
 
 public class Day06 : BaseDay
 {
-    private Problem[] _input;
-
-    public Day06()
+    public override ValueTask<string> Solve_1()
     {
         string[] lines = File.ReadAllLines(InputFilePath);
         string[][] matrix = lines.Select(l => l.Split(" ", StringSplitOptions.RemoveEmptyEntries)).ToArray();
@@ -18,24 +15,65 @@ public class Day06 : BaseDay
 
         for (int i = 0; i < matrix.Length; i++)
         {
-           for (int j = 0; j < matrix[i].Length; j++)
-           {
+            for (int j = 0; j < matrix[i].Length; j++)
+            {
                 pivotedMatrix[j][i] = matrix[i][j];
             }
         }
 
-        _input = pivotedMatrix.Select(r => Problem.Parse(r)).ToArray();
-    }
+        Problem[] input = pivotedMatrix.Select(r => Problem.Parse(r)).ToArray();
 
-    public override ValueTask<string> Solve_1()
-    {
-        long result = _input.Select(p => p.Solve()).Sum();
+        long result = input.Select(p => p.Solve()).Sum();
         return new(result.ToString());
     }
 
     public override ValueTask<string> Solve_2()
     {
-        return new("");
+        string[] lines = File.ReadAllLines(InputFilePath);
+        string[] pivoted = new string[lines[0].Length];
+
+        for (int i = 0; i < lines.Length; i++)
+        {
+            for (int j = 0; j < lines[i].Length; j++)
+            {
+                pivoted[j] += lines[i][j];
+            }
+        }
+
+        List<Problem> problems = new List<Problem>();
+        List<string> parts = new List<string>();
+        string operand = string.Empty;
+        foreach (var line in pivoted)
+        {
+            var trimmed = line.Trim();
+            if (string.IsNullOrWhiteSpace(trimmed))
+            {
+                // next problem
+                parts.Add(operand);
+                problems.Add(Problem.Parse(parts.ToArray()));
+                operand = string.Empty;
+                parts.Clear();
+                continue;
+            }
+
+            if (trimmed.EndsWith('+') || trimmed.EndsWith('*'))
+            {
+                parts.Add(trimmed.Substring(0, trimmed.Length - 1));
+                operand = trimmed.Last().ToString();
+            }
+            else
+            {
+                parts.Add(trimmed);
+            }
+        }
+
+        // last problem
+        parts.Add(operand);
+        problems.Add(Problem.Parse(parts.ToArray()));
+
+        long result = problems.Select(p => p.Solve()).Sum();
+
+        return new(result.ToString());
     }
 
     private record Problem(long[] Arguments, char Operand)
