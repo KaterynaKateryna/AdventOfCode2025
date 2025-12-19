@@ -351,3 +351,5 @@ MigrationBackup/
 
 # Test inputs
 AdventOfCode/Inputs/
+
+.idea/
